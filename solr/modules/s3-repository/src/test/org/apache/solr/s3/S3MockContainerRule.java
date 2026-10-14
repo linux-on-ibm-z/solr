@@ -56,6 +56,10 @@ public class S3MockContainerRule extends ExternalResource {
 
   @Override
   protected void before() {
+    // Skip on s390x - adobe/s3mock:5.1.0 does not support linux/s390x architecture
+    Assume.assumeFalse(
+        "Skipping S3 test: adobe/s3mock:5.1.0 does not support linux/s390x architecture",
+        "s390x".equals(System.getProperty("os.arch")));
     Assume.assumeTrue(
         "Docker/Testcontainers not available; skipping test",
         DockerClientFactory.instance().isDockerAvailable());
