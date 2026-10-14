@@ -44,6 +44,10 @@ public class KafkaContainerRule extends ExternalResource {
 
   @Override
   protected void before() {
+    // Skip on s390x - apache/kafka:4.3.1 does not support linux/s390x architecture
+    Assume.assumeFalse(
+        "Skipping Kafka test: apache/kafka:4.3.1 does not support linux/s390x architecture",
+        "s390x".equals(System.getProperty("os.arch")));
     Assume.assumeTrue(
         "Docker/Testcontainers not available; skipping test",
         DockerClientFactory.instance().isDockerAvailable());
